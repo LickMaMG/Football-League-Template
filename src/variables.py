@@ -1,0 +1,8 @@
+NOTION_ENDPOINT = "https://api.notion.com/v1/"
+LA_LIGA_TEAMS_URL = "https://www.laliga.com/en-GB/laliga-santander"
+ONE_FOOTBALL_URL = "https://onefootball.com/en/competition/laliga-10/table"
+NOTION_ENDPOINT = "https://api.notion.com/v1/"
+BARCA_PLAYERS_URL = "https://www.fcbarcelona.com/en/football/first-team/players"
+BARCA_CALENDAR_URL  ="https://www.fcbarcelona.com/en/football/first-team/schedule"
+LA_LIGA_CALENDAR_URL = "https://www.laliga.com/en-GB/laliga-santander/results/2023-24/gameweek-"
+LA_LIGA_GAMEDAY_URL = ""

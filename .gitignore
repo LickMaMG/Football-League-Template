@@ -1,0 +1,8 @@
+# API key and pages ID
+.env
+
+# Cache
+__pychache__/
+
+# Notebooks
+.ipynb
