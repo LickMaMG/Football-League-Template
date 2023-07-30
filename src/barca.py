@@ -1,10 +1,14 @@
 import os, re, unidecode, datetime
 from dotenv import load_dotenv
+from bs4 import BeautifulSoup
+import requests
 
-from player import create_player
-from utils import get_soup
-from match import create_match
-from variables import BARCA_PLAYERS_URL, BARCA_CALENDAR_URL
+from player import Player
+from match import Match
+
+
+BARCA_PLAYERS_URL = "https://www.fcbarcelona.com/en/football/first-team/players"
+BARCA_CALENDAR_URL  ="https://www.fcbarcelona.com/en/football/first-team/schedule"
 
 
 load_dotenv()
@@ -12,6 +16,11 @@ BARCA_PAGE_ID = os.getenv("BARCA_PAGE_ID")
 LA_LIGA_PAGE_ID = os.getenv("LA_LIGA_PAGE_ID")
 
 
+# class Barca
+def get_soup(url: str) -> BeautifulSoup:
+    html = requests.get(url).text
+    soup = BeautifulSoup(html, "html")
+    return soup
 
 
 

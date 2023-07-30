@@ -5,4 +5,6 @@
 __pychache__/
 
 # Notebooks
-.ipynb
+*.ipynb
+
+old

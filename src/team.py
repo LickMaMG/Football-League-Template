@@ -1,40 +1,90 @@
 import requests, os
-from auth import load_headers
 from dotenv import load_dotenv
-from variables import NOTION_ENDPOINT
 
-load_headers()
-TEAMS_DB_ID = os.getenv("TEAMS_DB_ID")
 
-def create_team(league_db_id, team_url, team_logo, team_full_name):
+
+class Team:
+    def __init__(self, league_db_id: str, team_url: str, team_logo: str, team_full_name: str, POST: bool = True) -> None:
+        
+        self.league_db_id   = league_db_id
+        self.team_url       = team_url
+        self.team_logo      = team_logo 
+        self.team_full_name = team_full_name
+        self.POST           = POST
+        
+        self.NOTION_ENDPOINT = "https://api.notion.com/v1/"
+        self.load_env()
+        self.load_headers()
+        self.create_team()
+
+        print(self)
     
-    payload = {
-        "parent": {
-            "type": "database_id",
-            "database_id": TEAMS_DB_ID
-        },
+    def __str__(self):
+        return "<Team {}>".format(self.team_full_name)
+
+    def load_env(self):
+        load_dotenv()
+        self.TEAMS_DB_ID    = os.getenv("TEAMS_DB_ID")
+        self.NOTION_API_KEY = os.getenv("NOTION_API_KEY")
+    
+    def load_headers(self) -> None:
+        self.headers = {
+            "accept": "application/json",
+            "Notion-Version": "2022-06-28",
+            "content-type": "application/json",
+            "Authorization": "Bearer " + self.NOTION_API_KEY
+        }
+
+
+    def create_team(self):
         
-        "icon": {
-            "type": "external",
-            "external": {"url": team_logo}
-        },
+        payload = self.get_payload()
+        if self.POST:
+            response = requests.post(self.NOTION_ENDPOINT+"pages/", headers=self.headers, json=payload)
+            response.raise_for_status()
         
-        "cover": {
-            "type": "external",
-            "external": {"url": team_logo}
-        },
         
-        "properties": {
-            "Name": {
-                "title": [{
-                    "text": {"content": team_full_name}
-                }]
+    def get_payload(self):
+        payload = self.team_payload
+        
+        payload["icon"]["external"]["url"]                           = self.team_logo
+        payload["cover"]["external"]["url"]                          = self.team_logo
+        payload["properties"]["Name"]["title"][0]["text"]["content"] = self.team_full_name
+        payload["properties"]["Team URL"]["url"]                     = self.team_url
+        payload["properties"]["League"]["relation"][0]["id"]         = self.league_db_id
+        
+        return payload
+        
+    @property
+    def team_payload(self):
+        payload = {
+            "parent": {
+                "type": "database_id",
+                "database_id": self.TEAMS_DB_ID
             },
-            "Team URL": {"url": team_url},
-            "League": {
-                "relation": [{"id": league_db_id}]
+            
+            "icon": {
+                "type": "external",
+                "external": {"url": ""}
+            },
+            
+            "cover": {
+                "type": "external",
+                "external": {"url": ""}
+            },
+            
+            "properties": {
+                "Name": {
+                    "title": [{
+                        "text": {"content": ""}
+                    }]
+                },
+                "Team URL": {"url": ""},
+                "League": {
+                    "relation": [{"id": ""}]
+                }
             }
         }
-    }
-    response = requests.post(NOTION_ENDPOINT+"pages/", headers=load_headers(), json=payload)
-    response.raise_for_status()
+        
+        return payload
+    

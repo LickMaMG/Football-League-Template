@@ -1,4 +1,4 @@
-from la_liga import gameday
+from laliga import gameday
 import argparse
 
 
